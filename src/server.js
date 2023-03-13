@@ -32,7 +32,7 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": "in progress"
     },
     {
         "id": 3,
@@ -41,7 +41,7 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": "pending"
     },
     {
         "id": 4,
@@ -50,7 +50,7 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": "completed"
     },
     {
         "id": 5,
