@@ -23,7 +23,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": {
+            "code": "new",
+            "styles": {
+                "background": "#C2C8FF",
+                "color": "#6F79D0"
+            }
+        }
     },
     {
         "id": 2,
@@ -32,7 +38,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "in progress"
+        "status": {
+            "code": "in progress",
+            "styles": {
+                "background": "#FFD0C2",
+                "color": "#B07D6C"
+            }
+        }
     },
     {
         "id": 3,
@@ -41,7 +53,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "pending"
+        "status": {
+            "code": "pending",
+            "styles": {
+                "background": "#EC9999",
+                "color": "#BD4242"
+            }
+        }
     },
     {
         "id": 4,
@@ -50,7 +68,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "completed"
+        "status": {
+            "code": "completed",
+            "styles": {
+                "background": "#B7D3B2",
+                "color": "#529F16"
+            }
+        }
     },
     {
         "id": 5,
@@ -59,7 +83,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": {
+            "code": "new",
+            "styles": {
+                "background": "#C2C8FF",
+                "color": "#6F79D0"
+            }
+        }
     },
     {
         "id": 6,
@@ -68,7 +98,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": {
+            "code": "new",
+            "styles": {
+                "background": "#C2C8FF",
+                "color": "#6F79D0"
+            }
+        }
     },
     {
         "id": 7,
@@ -77,7 +113,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": {
+            "code": "new",
+            "styles": {
+                "background": "#C2C8FF",
+                "color": "#6F79D0"
+            }
+        }
     },
     {
         "id": 8,
@@ -86,7 +128,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": {
+            "code": "new",
+            "styles": {
+                "background": "#C2C8FF",
+                "color": "#6F79D0"
+            }
+        }
     },
     {
         "id": 9,
@@ -95,7 +143,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": {
+            "code": "new",
+            "styles": {
+                "background": "#C2C8FF",
+                "color": "#6F79D0"
+            }
+        }
     },
     {
         "id": 10,
@@ -104,7 +158,13 @@ const products = [
         "category": "Category yre",
         "worker": "MishVinogr",
         "parts": "Roprem",
-        "status": "new"
+        "status": {
+            "code": "new",
+            "styles": {
+                "background": "#C2C8FF",
+                "color": "#6F79D0"
+            }
+        }
     },
 ];
 
