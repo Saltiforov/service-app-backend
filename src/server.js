@@ -1,19 +1,50 @@
-import express from 'express'
-const bp = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
+const config = require('./config');
+const db = require('./db');
+const bcrypt = require('bcrypt');
 
 const app = express();
-app.use(bp.json());
+app.use(bodyParser.json());
 
-const serverPort = 8000;
-
+app.listen(config.serverPort, () => {
+    console.log(`Server started on port ${config.serverPort}`);
+});
 
 app.get('/api/products', (req, res) => {
     res.status(200).json(products)
 })
 
-app.listen(serverPort, () => {
-    console.log(`Example app listening at http://localhost:${serverPort}`)
-})
+app.post('/api/login', async (req, res) => { //REGISTER METHOD
+    const { password, first_name, last_name, email, phone, role } = req.body;
+
+    const permission_code = 23132; // set permission code based on your business logic
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    db.query('INSERT INTO mydb.worker (permission_code, first_name, last_name, email, phone, role, password) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [permission_code, first_name, last_name, email, phone, role, hashedPassword], (error, results) => {
+            if (error) {
+                console.log('error', error)
+                res.status(500).send('Internal server error');
+            } else {
+                console.log('result ', results)
+                res.status(200).send('Worker created successfully');
+            }
+        });
+});
+
+app.get('/api/permissions', (req, res) => {
+    db.query('SELECT * FROM mydb.permissions', (error, results) => {
+        if (error) {
+            console.error('Error retrieving permissions from database', error);
+            return res.status(500).json({
+                message: 'An error occurred while retrieving permissions from the database'
+            });
+        }
+        return res.status(200).json(results);
+    });
+});
 
 const products = [
     {
@@ -168,17 +199,3 @@ const products = [
     },
 ];
 
-
-
-
-// app.get('/hello', (req, res) => { // basic api route
-//     res.send('Hello')
-// })
-//
-// app.get('/hello/:name', (req, res) => {
-//     res.send(`Hello ${req.params.name}`)
-// })
-//
-// app.post('/apple', (req, res) => {
-//     res.send(`Hello ${req.body.name}`)
-// })
