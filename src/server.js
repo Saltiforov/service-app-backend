@@ -93,10 +93,6 @@ app.get('/api/permissions', (req, res) => {
     });
 });
 
-app.get('/api/products', (req, res) => {
-    res.status(200).json(products)
-})
-
 app.get('/api/user-request', async (req, res) => {
     const query = 'SELECT * FROM mydb.user_request';
     db.query(query, (error, results) => {
@@ -109,156 +105,27 @@ app.get('/api/user-request', async (req, res) => {
     });
 });
 
-const products = [
-    {
-        "id": 1,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "new",
-            "styles": {
-                "background": "#C2C8FF",
-                "color": "#6F79D0"
-            }
+app.get('/api/parts', async (req, res) => {
+    const query = 'SELECT * FROM mydb.parts';
+    db.query(query, (error, results) => {
+        if (error) {
+            console.log('error', error)
+            res.status(500).send('Internal server error');
+        } else {
+            res.status(200).json({ data: results });
         }
-    },
-    {
-        "id": 2,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "in progress",
-            "styles": {
-                "background": "#FFD0C2",
-                "color": "#B07D6C"
-            }
+    });
+});
+
+app.get('/api/system-tasks', (req, res) => {
+    const query = 'SELECT * FROM mydb.system_task';
+    db.query(query, (error, results) => {
+        if (error) {
+            console.log('error', error);
+            res.status(500).send('Internal server error');
+        } else {
+            res.status(200).json(results);
         }
-    },
-    {
-        "id": 3,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "pending",
-            "styles": {
-                "background": "#EC9999",
-                "color": "#BD4242"
-            }
-        }
-    },
-    {
-        "id": 4,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "completed",
-            "styles": {
-                "background": "#B7D3B2",
-                "color": "#529F16"
-            }
-        }
-    },
-    {
-        "id": 5,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "new",
-            "styles": {
-                "background": "#C2C8FF",
-                "color": "#6F79D0"
-            }
-        }
-    },
-    {
-        "id": 6,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "new",
-            "styles": {
-                "background": "#C2C8FF",
-                "color": "#6F79D0"
-            }
-        }
-    },
-    {
-        "id": 7,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "new",
-            "styles": {
-                "background": "#C2C8FF",
-                "color": "#6F79D0"
-            }
-        }
-    },
-    {
-        "id": 8,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "new",
-            "styles": {
-                "background": "#C2C8FF",
-                "color": "#6F79D0"
-            }
-        }
-    },
-    {
-        "id": 9,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "new",
-            "styles": {
-                "background": "#C2C8FF",
-                "color": "#6F79D0"
-            }
-        }
-    },
-    {
-        "id": 10,
-        "date": "12/02/22",
-        "client": "Bret",
-        "category": "Category yre",
-        "worker": "MishVinogr",
-        "parts": "Roprem",
-        "status": {
-            "code": "new",
-            "styles": {
-                "background": "#C2C8FF",
-                "color": "#6F79D0"
-            }
-        }
-    },
-];
+    });
+});
 
