@@ -81,6 +81,20 @@ app.post('/api/new-task', async (req, res) => {
         });
 });
 
+app.post('/api/parts', async (req, res) => {
+    const { part_id, part_name, part_count, price, description } = req.body;
+
+    const query = 'INSERT INTO Parts (part_id, part_name, part_count, price, part_id, description) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(query, [part_id, part_name, part_count, price, description], (error, results) => {
+        if (error) {
+            console.log('error', error);
+            res.status(500).send('Internal server error');
+        } else {
+            res.status(200).json({ message: 'Part created successfully.', part_id });
+        }
+    });
+});
+
 app.get('/api/permissions', (req, res) => {
     db.query('SELECT * FROM mydb.permissions', (error, results) => {
         if (error) {
