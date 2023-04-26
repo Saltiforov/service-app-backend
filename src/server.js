@@ -84,7 +84,7 @@ app.post('/api/new-task', async (req, res) => {
 app.post('/api/parts', async (req, res) => {
     const { part_id, part_name, part_count, price, description } = req.body;
 
-    const query = 'INSERT INTO Parts (part_id, part_name, part_count, price, part_id, description) VALUES (?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO mydb.parts (part_id, part_name, part_count, price, description) VALUES (?, ?, ?, ?, ?)';
     db.query(query, [part_id, part_name, part_count, price, description], (error, results) => {
         if (error) {
             console.log('error', error);
@@ -131,15 +131,79 @@ app.get('/api/parts', async (req, res) => {
     });
 });
 
-app.get('/api/system-tasks', (req, res) => {
-    const query = 'SELECT * FROM mydb.system_task';
+app.get('/api/users', async (req, res) => {
+    const query = 'SELECT worker_code, CONCAT(first_name, " ", last_name) AS name FROM mydb.worker';
+    db.query(query, (error, results) => {
+        if (error) {
+            console.log('error', error)
+            res.status(500).send('Internal server error');
+        } else {
+            const workers = Array.isArray(results) ? results.map((worker) => ({
+                id: worker.worker_code,
+                name: worker.name
+            })) : [];
+
+            res.status(200).json([ ...workers ]);
+        }
+    });
+});
+
+app.get('/api/parts-list', async (req, res) => {
+    const query = 'SELECT part_id, part_name FROM mydb.parts';
     db.query(query, (error, results) => {
         if (error) {
             console.log('error', error);
             res.status(500).send('Internal server error');
         } else {
-            res.status(200).json(results);
+            const parts = Array.isArray(results) ? results.map((part) => ({
+                id: part.part_id,
+                name: part.part_name
+            })) : [];
+
+            res.status(200).json([...parts]);
         }
     });
 });
 
+app.get('/api/user-requests-list', async (req, res) => {
+    const query = 'SELECT request_id, user_name, email, summary FROM mydb.user_request';
+    db.query(query, (error, results) => {
+        if (error) {
+            console.log('error', error);
+            res.status(500).send('Internal server error');
+        } else {
+            const requests = Array.isArray(results) ? results.map((request) => ({
+                id: request.request_id,
+                user: request.user_name,
+                email: request.email,
+                summary: request.summary
+            })) : [];
+
+            res.status(200).json([...requests]);
+        }
+    });
+});
+
+app.get('/api/system-tasks', async (req, res) => {
+    const query = 'SELECT * FROM mydb.system_task';
+    db.query(query, (error, results) => {
+        if (error) {
+            console.log('error', error)
+            res.status(500).send('Internal server error');
+        } else {
+            const tasks = Array.isArray(results) ? results.map((task) => ({
+                id: task.task_id,
+                workerId: task.worker_id,
+                requestId: task.request_id,
+                partId: task.part_id,
+                name: task.task_name,
+                startDate: task.start_date,
+                endDate: task.end_date,
+                status: task.status,
+                summary: task.summary
+            })) : [];
+
+            res.status(200).json([...tasks]);
+        }
+    });
+});
