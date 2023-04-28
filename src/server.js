@@ -2,11 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
 const db = require('./db');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const app = express();
 app.use(bodyParser.json());
-const secretKey = 'your-secret-key-here';
 app.listen(config.serverPort, () => {
     console.log(`Server started on port ${config.serverPort}`);
 });

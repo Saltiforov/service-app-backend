@@ -1,6 +1,7 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const secretKey = 'your-secret-key-here';
 
 exports.createNewUser = async (req, res) => {
     const { password, user_name , first_name, last_name, email, phone, role } = req.body;
