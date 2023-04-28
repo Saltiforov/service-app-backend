@@ -185,10 +185,28 @@ app.get('/api/user-requests-list', async (req, res) => {
 });
 
 app.get('/api/system-tasks', async (req, res) => {
-    const query = 'SELECT * FROM mydb.system_task';
-    db.query(query, (error, results) => {
+    const { search, worker, status } = req.query;
+    let query = 'SELECT * FROM mydb.system_task WHERE 1=1';
+    let values = [];
+
+    if (search) {
+        query += ' AND task_name LIKE ?';
+        values.push(`%${search}%`);
+    }
+
+    if (worker) {
+        query += ' AND worker_id = ?';
+        values.push(worker);
+    }
+
+    if (status) {
+        query += ' AND status = ?';
+        values.push(status);
+    }
+
+    db.query(query, values, (error, results) => {
         if (error) {
-            console.log('error', error)
+            console.log('error', error);
             res.status(500).send('Internal server error');
         } else {
             const tasks = Array.isArray(results) ? results.map((task) => ({
