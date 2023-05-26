@@ -17,7 +17,7 @@ app.post('/api/user-request', userRequestModule.createUserRequest);
 
 app.post('/api/login', authModule.login);
 
-app.post('/api/register', authModule.createNewUser);
+app.post('/api/signup', authModule.createNewUser);
 
 app.post('/api/new-task', systemTaskModule.createSystemTask);
 
@@ -46,3 +46,5 @@ app.get('/api/parts-list', partsModule.getPartsListForSelection);
 app.get('/api/user-requests-list', userRequestModule.getUserListForSelection);
 
 app.get('/api/system-tasks', systemTaskModule.getSystemTasks);
+
+app.delete('/api/system-tasks/:taskId', systemTaskModule.deleteSystemTask);
