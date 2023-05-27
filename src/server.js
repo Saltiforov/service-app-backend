@@ -48,3 +48,9 @@ app.get('/api/user-requests-list', userRequestModule.getUserListForSelection);
 app.get('/api/system-tasks', systemTaskModule.getSystemTasks);
 
 app.delete('/api/system-tasks/:taskId', systemTaskModule.deleteSystemTask);
+
+app.put('/api/system-tasks/:taskId', systemTaskModule.editSystemTask);
+
+app.get('/api/statistics', systemTaskModule.getReportStatistic);
+
+app.get('/api/request-status', systemTaskModule.getReportStatusInfo);

@@ -127,3 +127,71 @@ const getPartsByPartIds = async (partIds) => {
 
     return parts;
 };
+
+exports.editSystemTask = async (req, res) => {
+    const { task_id, worker_id, request_id, part_id, task_name, start_date, end_date, status, summary } = req.body;
+
+    db.query(
+        'UPDATE mydb.system_task SET worker_id = ?, request_id = ?, part_id = ?, task_name = ?, start_date = ?, end_date = ?, status = ?, summary = ? WHERE task_id = ?',
+        [worker_id, request_id, part_id, task_name, start_date, end_date, status, summary, task_id],
+        async (error, results) => {
+            if (error) {
+                console.log('error', error);
+                res.status(500).send('Internal server error');
+            } else {
+                res.status(200).send('Task updated successfully');
+            }
+        }
+    );
+};
+
+// GET route to retrieve worker statistics
+exports.getReportStatistic = async (req, res) => {
+    const query = `
+    SELECT w.worker_code, w.user_name, COUNT(st.task_id) AS taskCount
+    FROM mydb.worker AS w
+    LEFT JOIN mydb.system_task AS st ON w.worker_code = st.worker_id
+    GROUP BY w.worker_code, w.user_name
+  `;
+
+    db.query(query, (error, results) => {
+        console.log('results', results)
+        if (error) {
+            console.log('error', error);
+            res.status(500).send('Internal server error');
+        } else {
+            const statistics = results.map((row) => ({
+                workerCode: row.worker_code,
+                userName: row.user_name,
+                taskCount: row.taskCount,
+            }));
+            res.status(200).json(statistics);
+        }
+    });
+}
+
+// app.get('/api/request-status',
+// Back-end route
+exports.getReportStatusInfo = async (req, res) => {
+    try {
+        const query = 'SELECT status, COUNT(*) as count FROM mydb.system_task GROUP BY status';
+        db.query(query, (error, results) => {
+            if (error) {
+                console.log('error', error);
+                res.status(500).send('Internal server error');
+            } else {
+                const requestStatus = Array.isArray(results)
+                    ? results.map((result) => ({
+                        status: result.status,
+                        count: result.count,
+                    }))
+                    : [];
+
+                res.status(200).json(requestStatus);
+            }
+        });
+    } catch (error) {
+        console.log('error', error);
+        res.status(500).send('Internal server error');
+    }
+};

@@ -45,7 +45,7 @@ exports.getPartsListForSelection = async (req, res) => {
         } else {
             const parts = Array.isArray(results) ? results.map((part) => ({
                 id: part.part_id,
-                name: part.part_name
+                part_name: part.part_name
             })) : [];
 
             res.status(200).json([...parts]);
