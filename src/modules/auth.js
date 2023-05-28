@@ -28,7 +28,6 @@ exports.createNewUser = async (req, res) => {
 };
 exports.login = async (req, res) => {
     const { user_name, password } = req.body;
-
     db.query('SELECT * FROM mydb.worker WHERE user_name = ?', [user_name], async (error, results) => {
         if (error) {
             console.log('error', error)

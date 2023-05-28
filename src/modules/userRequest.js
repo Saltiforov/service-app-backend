@@ -2,7 +2,7 @@ const db = require('../db');
 let request_id = 1;
 
 exports.createUserRequest = async (req, res) => {
-    const { user_name, email, summary } = req.body;
+    const { user_name, email, summary, phone } = req.body;
 
     const getMaxRequestIdQuery = 'SELECT MAX(request_id) AS max_request_id FROM mydb.user_request';
     db.query(getMaxRequestIdQuery, (error, results) => {
@@ -13,8 +13,8 @@ exports.createUserRequest = async (req, res) => {
             const maxRequestId = results[0].max_request_id || 0;
             const request_id = +maxRequestId + 1;
 
-            const insertQuery = 'INSERT INTO mydb.user_request (request_id, user_name, email, summary) VALUES (?, ?, ?, ?)';
-            db.query(insertQuery, [request_id, user_name, email, summary], (error, results) => {
+            const insertQuery = 'INSERT INTO mydb.user_request (request_id, user_name, email, summary, phone) VALUES (?, ?, ?, ?, ?)';
+            db.query(insertQuery, [request_id, user_name, email, summary, phone], (error, results) => {
                 if (error) {
                     console.log('error', error);
                     res.status(500).send('Internal server error');
@@ -25,6 +25,7 @@ exports.createUserRequest = async (req, res) => {
         }
     });
 };
+
 
 exports.getUserRequests = async (req, res) => {
     const query = 'SELECT * FROM mydb.user_request';

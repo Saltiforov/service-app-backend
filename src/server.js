@@ -12,6 +12,7 @@ const userModule = require('./modules/worker');
 const authModule = require('./modules/auth');
 const partsModule = require('./modules/parts');
 const systemTaskModule = require('./modules/systemTasks');
+const serviceModule = require('./modules/service');
 
 app.post('/api/user-request', userRequestModule.createUserRequest);
 
@@ -38,6 +39,8 @@ app.get('/api/permissions', (req, res) => {
 app.get('/api/user-request', userRequestModule.getUserRequests);
 
 app.get('/api/parts', partsModule.getPartsList);
+
+app.get('/api/services', serviceModule.getServices);
 
 app.get('/api/users', userModule.getUsers);
 
