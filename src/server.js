@@ -57,3 +57,5 @@ app.put('/api/system-tasks/:taskId', systemTaskModule.editSystemTask);
 app.get('/api/statistics', systemTaskModule.getReportStatistic);
 
 app.get('/api/request-status', systemTaskModule.getReportStatusInfo);
+
+app.get('/api/reports-price', systemTaskModule.calculatePriceByWorker);

@@ -68,7 +68,6 @@ exports.getSystemTasks = async (req, res) => {
 
     try {
         const tasks = await executeQuery(query, values);
-        console.log('results', tasks);
 
         const workerIds = tasks.map((task) => task.worker_id);
         const workers = await getWorkersByWorkerIds(workerIds);
@@ -100,6 +99,9 @@ exports.getSystemTasks = async (req, res) => {
             task.part = parts[task.part_id];
         }
 
+        console.log('tasks', tasks)
+
+        res.setHeader('Cache-Control', 'no-store'); // Disable caching
         res.status(200).json([...tasks]);
     } catch (error) {
         console.log('error', error);
@@ -123,8 +125,6 @@ exports.deleteSystemTask = (req, res) => {
         }
     });
 };
-
-
 
 
 // Helper function to execute a database query
@@ -173,6 +173,21 @@ const getPartsByPartIds = async (partIds) => {
     return parts;
 };
 
+const getWorkerByCode = async (workerCode) => {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM mydb.worker WHERE worker_code = ?';
+        db.query(query, [workerCode], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                // Assuming only one worker is expected to match the workerCode
+                const worker = results.length > 0 ? results[0] : null;
+                resolve(worker);
+            }
+        });
+    });
+};
+
 exports.editSystemTask = async (req, res) => {
     const { task_id, worker_id, request_id, part_id, task_name, start_date, end_date, status, summary, service } = req.body;
 
@@ -198,7 +213,10 @@ exports.editSystemTask = async (req, res) => {
                         console.log('error', error);
                         res.status(500).send('Internal server error');
                     } else {
-                        res.status(200).send('Task updated successfully');
+                        // Fetch the updated task
+                        const updatedTask = await getTaskById(task_id);
+
+                        res.status(200).json(updatedTask);
                     }
                 }
             );
@@ -206,8 +224,42 @@ exports.editSystemTask = async (req, res) => {
     });
 };
 
+async function getTaskById(taskId) {
+    const query = 'SELECT * FROM mydb.system_task WHERE task_id = ?';
+    const values = [taskId];
+    const tasks = await executeQuery(query, values);
 
+    if (tasks.length > 0) {
+        const task = tasks[0];
 
+        // Fetch additional data for the task
+        const workerIds = [task.worker_id];
+        const workers = await getWorkersByWorkerIds(workerIds);
+        const parts = await getPartsByPartIds([task.part_id]);
+
+        // Update the task object with additional data
+        const { service } = task;
+        if (service) {
+            const { id, name } = JSON.parse(service);
+            task.service = { id, name };
+
+            const updatedService = await getServiceById(id);
+            if (updatedService) {
+                task.service = {
+                    id: updatedService.id,
+                    name: `${updatedService.name} with price ($ ${updatedService.price})`,
+                };
+            }
+        }
+
+        task.worker = workers[task.worker_id];
+        task.part = parts[task.part_id];
+
+        return task;
+    }
+
+    return null;
+}
 
 
 // GET route to retrieve worker statistics
@@ -255,6 +307,59 @@ exports.getReportStatusInfo = async (req, res) => {
                 res.status(200).json(requestStatus);
             }
         });
+    } catch (error) {
+        console.log('error', error);
+        res.status(500).send('Internal server error');
+    }
+};
+
+const getPartById = async (partId) => {
+    try {
+        const query = 'SELECT * FROM mydb.parts WHERE part_id = ?';
+        const values = [partId];
+        const results = await executeQuery(query, values);
+
+        if (results.length > 0) {
+            return results[0];
+        } else {
+            throw new Error('Part not found');
+        }
+    } catch (error) {
+        throw new Error(`Error retrieving part: ${error.message}`);
+    }
+};
+
+exports.calculatePriceByWorker = async (req, res) => {
+    try {
+        const tasks = await executeQuery('SELECT worker_id, part_id, service FROM mydb.system_task');
+        const results = [];
+
+        for (let i = 0; i < tasks.length; i++) {
+            const task = tasks[i];
+            const { worker_id, part_id, service } = task;
+
+            const part = await getPartById(part_id);
+            const { id, name, price } = JSON.parse(service);
+            const totalPrice = part.price + price;
+
+            const workerIndex = results.findIndex((result) => result.id === worker_id);
+
+            if (workerIndex === -1) {
+                // Fetch the worker's name based on the worker_id
+                const worker = await getWorkerByCode(worker_id);
+                const user_name = worker ? worker.user_name : 'Unknown';
+
+                results.push({
+                    id: worker_id,
+                    user_name: user_name,
+                    responsible_task_price: totalPrice,
+                });
+            } else {
+                results[workerIndex].responsible_task_price += totalPrice;
+            }
+        }
+
+        res.status(200).json(results);
     } catch (error) {
         console.log('error', error);
         res.status(500).send('Internal server error');
