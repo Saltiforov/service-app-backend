@@ -54,6 +54,8 @@ app.delete('/api/system-tasks/:taskId', systemTaskModule.deleteSystemTask);
 
 app.put('/api/system-tasks/:taskId', systemTaskModule.editSystemTask);
 
+app.delete('/api/parts/:partId', partsModule.deletePartById);
+
 app.get('/api/statistics', systemTaskModule.getReportStatistic);
 
 app.get('/api/request-status', systemTaskModule.getReportStatusInfo);

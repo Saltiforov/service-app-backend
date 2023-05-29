@@ -36,6 +36,22 @@ exports.getPartsList = async (req, res) => {
     });
 }
 
+exports.deletePartById = async (req, res) => {
+    const partId = req.params.partId;
+    const query = 'DELETE FROM mydb.parts WHERE part_id = ?';
+
+    db.query(query, [partId], (error, result) => {
+        if (error) {
+            console.log('error', error);
+            res.status(500).send('Internal server error');
+        } else if (result.affectedRows === 0) {
+            res.status(404).json({ error: 'Part not found' });
+        } else {
+            res.status(200).json({ message: 'Part deleted successfully' });
+        }
+    });
+};
+
 exports.getPartsListForSelection = async (req, res) => {
     const query = 'SELECT part_id, part_name FROM mydb.parts';
     db.query(query, (error, results) => {
