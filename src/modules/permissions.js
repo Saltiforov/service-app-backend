@@ -44,7 +44,19 @@ exports.updateWorkerPermission = async (req, res) => {
                     console.log('error', error);
                     res.status(500).send('Internal server error');
                 } else {
-                    res.status(200).send('Worker permission and role updated successfully');
+                    // Retrieve the updated worker item from the database
+                    const getWorkerQuery = 'SELECT * FROM mydb.worker WHERE worker_code = ?';
+                    db.query(getWorkerQuery, [worker_id], (error, results) => {
+                        if (error) {
+                            console.log('error', error);
+                            res.status(500).send('Internal server error');
+                        } else {
+                            // Extract the first (and only) worker item from the results
+                            const updatedWorker = results[0];
+
+                            res.status(200).json(updatedWorker);
+                        }
+                    });
                 }
             });
         }
