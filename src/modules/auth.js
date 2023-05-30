@@ -5,10 +5,10 @@ const secretKey = 'your-secret-key-here';
 const { v4: uuidv4 } = require('uuid');
 
 exports.createNewUser = async (req, res) => {
-    const { password, user_name, first_name, last_name, email, phone, role } = req.body;
+    const { password, user_name, first_name, last_name, email, phone } = req.body;
     const worker_code = uuidv4();
-
-    const permission_code = 23132; // set permission code based on your business logic
+    const permission_code = 'service_center.manage_staff'; // set permission code based on your business logic
+    const role = permission_code === 'service_center.admin' ? 'admin' : 'worker';
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -26,6 +26,7 @@ exports.createNewUser = async (req, res) => {
         }
     );
 };
+
 exports.login = async (req, res) => {
     const { user_name, password } = req.body;
     db.query('SELECT * FROM mydb.worker WHERE user_name = ?', [user_name], async (error, results) => {

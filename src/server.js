@@ -13,6 +13,7 @@ const authModule = require('./modules/auth');
 const partsModule = require('./modules/parts');
 const systemTaskModule = require('./modules/systemTasks');
 const serviceModule = require('./modules/service');
+const permissionModule = require('./modules/permissions');
 
 app.post('/api/user-request', userRequestModule.createUserRequest);
 
@@ -44,6 +45,8 @@ app.get('/api/services', serviceModule.getServices);
 
 app.get('/api/users', userModule.getUsers);
 
+app.get('/api/all-users', userModule.getAllWorkersData);
+
 app.get('/api/parts-list', partsModule.getPartsListForSelection);
 
 app.get('/api/user-requests-list', userRequestModule.getUserListForSelection);
@@ -61,3 +64,7 @@ app.get('/api/statistics', systemTaskModule.getReportStatistic);
 app.get('/api/request-status', systemTaskModule.getReportStatusInfo);
 
 app.get('/api/reports-price', systemTaskModule.calculatePriceByWorker);
+
+app.get('/api/permission-list', permissionModule.getAllPermissions);
+
+app.post('/api/update-permission', permissionModule.updateWorkerPermission);
