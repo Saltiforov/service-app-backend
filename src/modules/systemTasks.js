@@ -79,12 +79,10 @@ exports.getSystemTasks = async (req, res) => {
             const task = tasks[i];
             const { service } = task;
 
-            // Convert the service field to an object with only id and name
             if (service) {
                 const { id, name } = JSON.parse(service);
                 task.service = { id, name };
 
-                // Fetch the updated service information from the service table
                 const updatedService = await getServiceById(id);
                 console.log('updatedService', updatedService);
                 if (updatedService) {
@@ -101,7 +99,7 @@ exports.getSystemTasks = async (req, res) => {
 
         console.log('tasks', tasks)
 
-        res.setHeader('Cache-Control', 'no-store'); // Disable caching
+        res.setHeader('Cache-Control', 'no-store');
         res.status(200).json([...tasks]);
     } catch (error) {
         console.log('error', error);
